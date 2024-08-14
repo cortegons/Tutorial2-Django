@@ -2,6 +2,7 @@ from typing import Any
 from django.shortcuts import render
 # from django.http import HttpResponse
 from django.views.generic import TemplateView
+from django.views import View
 # Create your views here.
 
 #def homePageView(request):
@@ -37,3 +38,33 @@ class ContactPageView(TemplateView):
         })
         
         return context
+
+class Product:
+    products = [
+        {"id":"1", "name":"TV", "description":"Best TV", "price": "$ 300"},
+        {"id":"2", "name":"iPhone", "description":"Best iPhone", "price": "$ 500"},
+        {"id":"3", "name":"Chromecast", "description":"Best Chromecast", "price": "$ 400"},
+        {"id":"4", "name":"Glasses", "description":"Best Glasses", "price": "$ 60"},
+    ]
+    
+class ProductIndexView(View):
+    template_name = "products/index.html"
+    def get(self, request):
+        viewData = {}
+        viewData["title"] = "Products - Online Store"
+        viewData["subtitle"] = "List of products"
+        viewData["products"] = Product.products
+        
+        return render(request, self.template_name, viewData)
+    
+class ProductShowView(View):
+    template_name = "products/show.html"
+    
+    def get(self, request, id):
+        viewData = {}
+        product = Product.products[int(id)-1]
+        viewData["title"] = product["name"] + " - Online Store"
+        viewData["subtitle"] = product["name"] + " - Product information"
+        viewData["product"] = product
+        
+        return render(request, self.template_name, viewData)
