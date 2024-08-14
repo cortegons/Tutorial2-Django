@@ -23,3 +23,17 @@ class AboutPageView(TemplateView):
         })
         
         return context
+    
+class ContactPageView(TemplateView):
+    template_name = "contact.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            "title": "Contact us - Online Store",
+            "subtitle": "Contact us",
+            "email": "example@mail.com",
+            "address": "17 St 8B-10",
+            "phonenumber": "1234567890"
+        })
+        
+        return context
