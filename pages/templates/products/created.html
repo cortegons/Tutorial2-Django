@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-
 {% block content %}
-<h2>{{ title }}</h2>
-<p>Product created successfully!</p>
-<a href="{% url 'form' %}">Create another product</a>
+<div class="container">
+    <h2>{{ title }}</h2>
+    <a href="{% url 'form' %}">Regresar</a>
+</div>
 {% endblock %}
