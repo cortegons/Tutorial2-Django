@@ -23,3 +23,8 @@ nav{
     align-items: center;
     justify-content: center;
 }
+
+.precio100{
+    color:red;
+    background-color: red;
+}
