@@ -82,13 +82,13 @@ class ProductShowView(View):
         
         
     
-class ProductForm(forms.Form):
-    name = forms.CharField(required=True)
-    price = forms.FloatField(required=True)
-    
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['name', 'price']    
     def clean(self):
         price = self.cleaned_data.get("price")
-        if price <= 0:
+        if price is not None and price <= 0:
             raise forms.ValidationError("Price can't be less or equal zero")
     
 class ProductCreateView(View):
@@ -106,6 +106,7 @@ class ProductCreateView(View):
     def post(self, request):
         form = ProductForm(request.POST)
         if form.is_valid():
+            form.save()
             return render(request, self.created_template_name, {"title": "Product created"})
         else:
             viewData = {}
