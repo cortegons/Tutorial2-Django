@@ -1,11 +1,11 @@
 from typing import Any
-from django.shortcuts import render
 from django.urls import reverse
 from django.http import HttpResponseRedirect
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 from django.views import View
 from django import forms
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Product
 # Create your views here.
 
 #def homePageView(request):
@@ -42,6 +42,7 @@ class ContactPageView(TemplateView):
         
         return context
 
+"""
 class Product:
     products = [
         {"id":"1", "name":"TV", "description":"Best TV", "price": 300},
@@ -49,31 +50,37 @@ class Product:
         {"id":"3", "name":"Chromecast", "description":"Best Chromecast", "price": 400},
         {"id":"4", "name":"Glasses", "description":"Best Glasses", "price": 60},
     ]
-    
+"""
 class ProductIndexView(View):
     template_name = "products/index.html"
     def get(self, request):
         viewData = {}
         viewData["title"] = "Products - Online Store"
         viewData["subtitle"] = "List of products"
-        viewData["products"] = Product.products
+        viewData["products"] = Product.objects.all()
         
         return render(request, self.template_name, viewData)
     
 class ProductShowView(View):
     template_name = 'products/show.html'
     def get(self, request, id):
-        viewData = {}
         try:
-            product = Product.products[int(id)-1]
-            viewData["subtitle"] = product["name"] + " - Product information"
-            viewData["product"] = product
-            
-            return render(request, self.template_name, viewData)
-        
+            product_id = int(id)
+            if product_id < 1:
+                raise ValueError("Product id must be 1 or greater")
+            product = get_object_or_404(Product, pk=product_id)
         except (IndexError, ValueError):
             return HttpResponseRedirect(reverse("home"))
-    
+
+        viewData = {}
+        product = get_object_or_404(Product, pk=product_id)
+        viewData["title"] = product.name + ' - Online Store'
+        viewData["subtitle"] = product.name + " - Product information"
+        viewData["product"] = product
+            
+        return render(request, self.template_name, viewData)
+        
+        
     
 class ProductForm(forms.Form):
     name = forms.CharField(required=True)
